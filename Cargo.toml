@@ -1,0 +1,15 @@
+[package]
+name = 'bot'
+version = '0.0.1'
+authors = ['JA1ZLO <nextzlog@gmail.com>']
+edition = '2021'
+
+[dependencies]
+itertools = '*'
+jsonschema = '*'
+md5 = '*'
+reqwest = {version = '*', features=['blocking']}
+serde-transcode = '*'
+serde_json = '*'
+serde_yaml = '*'
+toml = '0.5.*'
