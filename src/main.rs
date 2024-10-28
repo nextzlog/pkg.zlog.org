@@ -4,7 +4,7 @@
  * Univ. Tokyo Amateur Radio Club Development Task Force (https://nextzlog.dev)
 *******************************************************************************/
 
-use jsonschema::JSONSchema;
+use jsonschema::Validator;
 use reqwest::blocking::get;
 use serde_json::Serializer;
 use serde_yaml::from_str;
@@ -12,6 +12,8 @@ use toml::Deserializer;
 use toml::Value;
 
 type Return<E> = Result<E, Box<dyn std::error::Error>>;
+
+const SCH: &str = include_str!("schema.yaml");
 
 fn checksum(item: &mut Value) -> Return<()> {
 	if item.get("sum").is_none() {
@@ -52,11 +54,10 @@ fn tree(list: &mut Value) -> Return<String> {
 fn fetch(url: &str) -> Return<String> {
 	let res = get(url)?.error_for_status()?;
 	let val = res.text()?.parse::<Value>()?;
-	let sch = from_str(include_str!("schema.yaml"))?;
-	let cmp = JSONSchema::compile(&sch).unwrap();
+	let cmp = Validator::new(&from_str(SCH)?);
 	let tmp = serde_json::to_value(val.clone())?;
-	if let Err(error) = cmp.validate(&tmp) {
-		eprintln!("{}", itertools::join(error, ", "));
+	if let Err(error) = cmp?.validate(&tmp) {
+		eprintln!("{}", error);
 		std::process::abort();
 	}
 	tree(&mut val.clone())
