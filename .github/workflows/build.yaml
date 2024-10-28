@@ -48,6 +48,7 @@ jobs:
       url: ${{steps.deployment.outputs.page_url}}
     steps:
     - uses: actions/deploy-pages@v1
+    if: ${{!failure()}}
   Sustain:
     runs-on: ubuntu-latest
     steps:
