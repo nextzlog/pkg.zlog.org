@@ -17,7 +17,7 @@ jobs:
   Compile:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
@@ -36,9 +36,9 @@ jobs:
         sudo chmod a+x bot
         ./bot > market.json
         rm bot
-    - uses: actions/configure-pages@v2
+    - uses: actions/configure-pages@v5
     - uses: actions/jekyll-build-pages@v1
-    - uses: actions/upload-pages-artifact@v1
+    - uses: actions/upload-pages-artifact@v3
     if: ${{!failure()}}
   Publish:
     needs: Prepare
@@ -47,7 +47,7 @@ jobs:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
     steps:
-    - uses: actions/deploy-pages@v1
+    - uses: actions/deploy-pages@v4
     if: ${{!failure()}}
   Sustain:
     runs-on: ubuntu-latest
